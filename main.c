@@ -11,11 +11,11 @@ void print_usage();
 int main(int argc,char* argv[] ){
 	setlocale(LC_ALL, "");
 	int c;
-	int digit_optind = 0;
+	// int digit_optind = 0;
 
 
 	for (;;) {
-		int this_option_optind = optind ? optind : 1;
+		// int this_option_optind = optind ? optind : 1;
 		int option_index = 0;
 		static struct option long_options[] = {
 			{"cli",  no_argument,&arg_ds.mode,  1 },

@@ -1,17 +1,17 @@
 CC=gcc
 CFLAGS= -Ofast -march='native'
-CFLAG+= -ggdb -Werror -Wall -Wextra -Wpedantic -Wconversion -Winline -Wshadow
-CFLAG+= -Wfloat-equal -Wunreachable-code -Winit-self -Wuninitialized -Wvla
-CFLAG+= -Wvector-operation-performance -Wdisabled-optimization -fanalyzer 
+CFLAGS+= -ggdb -Werror -Wall -Wextra -Wpedantic -Wconversion -Winline -Wshadow
+CFLAGS+= -Wfloat-equal -Wunreachable-code -Winit-self -Wuninitialized -Wvla
+CFLAGS+= -Wvector-operation-performance -Wdisabled-optimization -fanalyzer 
 #CPPFLAGS=
 #LDFLAGS=
 LDLIBS= `pkg-config --libs --cflags ncurses`
 OBJ= main.o tui.o data.o
 
-all: tm.out
+all: tm
 	@echo 'compilation finished'
-tm.out:${OBJ}
-	${CC} ${CFLAGS} ${LDLIBS} ${OBJ} -o tm.out
+tm:${OBJ}
+	${CC} ${CFLAGS} ${LDLIBS} ${OBJ} -o tm
 main.o:../main.c ../doth/arg.h ../doth/tui.h
 	${CC} ${CFLAGS} -c ../main.c -o main.o
 data.o:../data.c ../doth/arg.h ../doth/tui.h

@@ -1,4 +1,4 @@
-
+#pragma once
 struct rgb{char r; char g; char b;};
 struct win{
 	int x;

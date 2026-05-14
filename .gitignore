@@ -1,3 +1,7 @@
+
+*/tm*
+*.log*
+
 #profiler
 *.data*
 # Prerequisites

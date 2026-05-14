@@ -7,14 +7,9 @@ extern struct GAP_BUFF{
 	int size;
 }gap_buff;
 
-struct gb_status{
-	char* str;
-	char* status;
-	int size;
-};
-
 extern void gb_init(char* str,int n,int size);
 extern void gb_del();
 extern void gb_push(char ch);
 extern void gb_pop();
-extern struct gb_status gb_get_status();
+extern void gb_get_status(char** str,char** status);
+extern void gb_log();

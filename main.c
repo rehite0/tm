@@ -1,17 +1,17 @@
 #include <unistd.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <locale.h>
 #include <getopt.h>
 #include "./doth/arg.h"
 #include "./doth/tui.h"
+#include "./doth/utils.h"
 
-void print_usage();
 
 int main(int argc,char* argv[] ){
 	setlocale(LC_ALL, "");
 	int c;
 	// int digit_optind = 0;
+	open_log();
 
 
 	for (;;) {
@@ -99,8 +99,4 @@ int main(int argc,char* argv[] ){
 	return 0;
 }
 
-[[noreturn]] void print_usage(){
-	printf("incorrect use\n");
-	fflush(stdout);
-	exit(1);
-}
+

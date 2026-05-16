@@ -7,18 +7,49 @@
 #include "./doth/utils.h"
 #include "./doth/core.h"
 
-void tui_main(){
+static void color_fill();
+static void set_uptui();
+static void set_uptui(){
 	initscr();
 	noecho();
 	cbreak();
 	start_color();
-	init_color(11,555,256,0);
-	init_color(12,555,555,20);
+	color_fill();
+	init_color(11,type_page.color_correct.fg.r
+			,type_page.color_correct.fg.g
+			,type_page.color_correct.fg.b);
 	init_color(12,type_page.color_correct.bg.r
 			,type_page.color_correct.bg.g
 			,type_page.color_correct.bg.b);
+	init_pair(11,11,12); /* correct color */
 
-	init_pair(11,11,12);
+	init_color(13,type_page.color_wrong.fg.r
+			,type_page.color_wrong.fg.g
+			,type_page.color_wrong.fg.b);
+	init_color(14,type_page.color_wrong.bg.r
+			,type_page.color_wrong.bg.g
+			,type_page.color_wrong.bg.b);
+	init_pair(12,13,14); /* wrong color */
+
+	init_color(15,type_page.color_untyped.fg.r
+			,type_page.color_untyped.fg.g
+			,type_page.color_untyped.fg.b);
+	init_color(16,type_page.color_untyped.bg.r
+			,type_page.color_untyped.bg.g
+			,type_page.color_untyped.bg.b);
+	init_pair(13,15,16); /* untyped color */
+
+	init_color(17,type_page.color_border.fg.r
+			,type_page.color_border.fg.g
+			,type_page.color_border.fg.b);
+	init_color(18,type_page.color_border.bg.r
+			,type_page.color_border.bg.g
+			,type_page.color_border.bg.b);
+	init_pair(14,17,18); /* border color */
+}
+
+void tui_main(){
+	set_uptui();
 
 	WINDOW* challange_space_win= newwin(
 			type_page.challenge_space.h
@@ -36,8 +67,7 @@ void tui_main(){
 	box(challange_space_win,0,0);
 	box(type_space_win,0,0);
 
-	mvwprintw(challange_space_win,2,1,"qwre cs:%d c:%d",COLOR_PAIRS,COLORS);
-	char* test_str="asgvaerhaethbtbhtrhh";
+	char* test_str="quick brown fox jump over the lazy brown dog";
 	gb_init(test_str, (int)strlen(test_str), 256);
 	mvwprintw(challange_space_win,1,1,"%s",test_str);
 	wmove(challange_space_win, 1,1);
@@ -53,7 +83,6 @@ void tui_main(){
 
 		wclear(type_space_win);
 		box(type_space_win,0,0);
-	wattron(type_space_win,COLOR_PAIR(11));
 		wmove(type_space_win,1,1);
 
 		int i=0,x=-1,y=-1;
@@ -63,7 +92,14 @@ void tui_main(){
 				y=getcury(type_space_win);
 			}
 
+			if(status[i]=='c')	 wattron(type_space_win,COLOR_PAIR(11));
+			else if (status[i]=='w') wattron(type_space_win,COLOR_PAIR(12));
+			else if (status[i]=='u') wattron(type_space_win,COLOR_PAIR(13));
 			waddch(type_space_win,(chtype)str[i]);
+			if(status[i]=='c')	 wattroff(type_space_win,COLOR_PAIR(11));
+			else if (status[i]=='w') wattroff(type_space_win,COLOR_PAIR(12));
+			else if (status[i]=='u') wattroff(type_space_win,COLOR_PAIR(13));
+
 			if(getcurx(type_space_win)+1==getmaxx(type_space_win))
 				wmove(type_space_win,getcury(type_space_win)+1,1);
 			++i;
@@ -71,7 +107,6 @@ void tui_main(){
 		if(!(x==-1 || y==-1))
 			wmove(type_space_win,y,x);
 		free(str);free(status);
-	wattroff(type_space_win,COLOR_PAIR(11));
 
 		curs_set(0); wrefresh(type_space_win); curs_set(1);
 
@@ -92,3 +127,32 @@ void tui_main(){
 	endwin();
 }
 
+static void color_fill(){
+	assume_default_colors(COLOR_WHITE, COLOR_BLACK);
+	struct rgb def_fg,def_bg;
+	short fg_num,bg_num;
+	pair_content(0, &fg_num, &bg_num);
+	color_content(fg_num, &def_fg.r, &def_fg.g, &def_fg.b);
+	color_content(bg_num, &def_bg.r, &def_bg.g, &def_bg.b);
+
+	fprintf(LOG_F,"fg %d %d %d\n",def_fg.r,def_fg.g,def_fg.b);
+	fprintf(LOG_F,"bg %d %d %d\n",def_bg.r,def_bg.g,def_bg.b);
+	fflush(LOG_F);
+
+	struct rgb* l[][2]={
+		{&type_page.color_untyped.bg	,&def_bg},
+		{&type_page.color_correct.bg	,&def_bg},
+		{&type_page.color_wrong.bg	,&def_bg},
+		{&type_page.color_border.bg	,&def_bg},
+		{&type_page.color_untyped.fg	,&def_fg},
+		{&type_page.color_correct.fg	,&def_fg},
+		{&type_page.color_border.fg	,&def_fg},
+	};
+	for(long unsigned int i=0;i<sizeof(l)/sizeof(l[0]);++i){
+		struct rgb* set=l[i][0];
+		struct rgb* def=l[i][1];
+		if(set->r==-1) set->r=def->r;
+		if(set->g==-1) set->g=def->g;
+		if(set->b==-1) set->b=def->b;
+	}
+}

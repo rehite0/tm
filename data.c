@@ -13,7 +13,11 @@ struct TYPE_PAGE type_page={
 	.type_space={
 		.x=10, .y=12, .h=5, .w=65
 	},
-	.cursor_char=u8"|"
+	.color_correct	={ .fg={    0,1000,   0 } , .bg={ -1,-1,-1 } },
+	.color_wrong	={ .fg={  1000,  0,   0 } , .bg={ -1,-1,-1 } },
+	.color_untyped	={ .fg={  400, 400, 400 } , .bg={ -1,-1,-1 } },
+	.color_border	={ .fg={   -1,  -1,  -1 } , .bg={ -1,-1,-1 } },
+	// .cursor_char=u8"|"
 };
 struct GAP_BUFF gap_buff={
 	.arr=0, .status=0, .lp=0 ,.rp=0,.size=0

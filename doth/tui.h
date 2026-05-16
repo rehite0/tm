@@ -17,6 +17,7 @@ extern struct TYPE_PAGE{
 	struct C_PAIR color_wrong;
 	struct C_PAIR color_correct;
 	struct C_PAIR color_untyped;
+	struct C_PAIR color_border;
 	// struct C_PAIR color_cursor;
 	// unsigned char* cursor_char;
 } type_page;

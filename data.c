@@ -8,15 +8,20 @@ struct ARG_DS arg_ds={
 
 struct TYPE_PAGE type_page={
 	.challenge_space={
-		.x=10, .y=4, .h=5, .w=65
+		.x=10, .y=4, .h=5, .w=65,
+		.color_border	={ .fg={   -1,  -1,  -1 } , .bg={ -1,-1,-1 } },
+		.color		={ .fg={   -1,  -1,  -1 } , .bg={ -1,-1,-1 } }
+
 	},
 	.type_space={
-		.x=10, .y=12, .h=5, .w=65
+		.x=10, .y=12, .h=5, .w=65,
+		.color_border	={ .fg={   -1,  -1,  -1 } , .bg={ -1,-1,-1 } },
+		.color		={ .fg={   -1,  -1,  -1 } , .bg={ -1,-1,-1 } }
 	},
 	.color_correct	={ .fg={    0,1000,   0 } , .bg={ -1,-1,-1 } },
 	.color_wrong	={ .fg={  1000,  0,   0 } , .bg={ -1,-1,-1 } },
-	.color_untyped	={ .fg={  400, 400, 400 } , .bg={ -1,-1,-1 } },
-	.color_border	={ .fg={   -1,  -1,  -1 } , .bg={ -1,-1,-1 } },
+	.color_untyped	={ .fg={  550, 550, 550 } , .bg={ -1,-1,-1 } },
+	.color_page	={ .fg={   -1,  -1,  -1 } , .bg={ -1,-1,-1 } },
 	// .cursor_char=u8"|"
 };
 struct GAP_BUFF gap_buff={

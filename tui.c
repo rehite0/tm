@@ -39,17 +39,50 @@ static void set_uptui(){
 			,type_page.color_untyped.bg.b);
 	init_pair(13,15,16); /* untyped color */
 
-	init_color(17,type_page.color_border.fg.r
-			,type_page.color_border.fg.g
-			,type_page.color_border.fg.b);
-	init_color(18,type_page.color_border.bg.r
-			,type_page.color_border.bg.g
-			,type_page.color_border.bg.b);
-	init_pair(14,17,18); /* border color */
+	init_color(17,type_page.type_space.color_border.fg.r
+			,type_page.type_space.color_border.fg.g
+			,type_page.type_space.color_border.fg.b);
+	init_color(18,type_page.type_space.color_border.bg.r
+			,type_page.type_space.color_border.bg.g
+			,type_page.type_space.color_border.bg.b);
+	init_pair(14,17,18); /* type space border color */
+
+	init_color(19,type_page.challenge_space.color_border.fg.r
+			,type_page.challenge_space.color_border.fg.g
+			,type_page.challenge_space.color_border.fg.b);
+	init_color(20,type_page.challenge_space.color_border.bg.r
+			,type_page.challenge_space.color_border.bg.g
+			,type_page.challenge_space.color_border.bg.b);
+	init_pair(15,19,20); /* challenge space border color */
+
+	init_color(21,type_page.type_space.color.fg.r
+			,type_page.type_space.color.fg.g
+			,type_page.type_space.color.fg.b);
+	init_color(22,type_page.type_space.color.bg.r
+			,type_page.type_space.color.bg.g
+			,type_page.type_space.color.bg.b);
+	init_pair(16,21,22); /* type space color */
+
+	init_color(23,type_page.challenge_space.color.fg.r
+			,type_page.challenge_space.color.fg.g
+			,type_page.challenge_space.color.fg.b);
+	init_color(24,type_page.challenge_space.color.bg.r
+			,type_page.challenge_space.color.bg.g
+			,type_page.challenge_space.color.bg.b);
+	init_pair(17,23,24); /* challenge space color */
+
+	init_color(25,type_page.color_page.fg.r
+			,type_page.color_page.fg.g
+			,type_page.color_page.fg.b);
+	init_color(26,type_page.color_page.bg.r
+			,type_page.color_page.bg.g
+			,type_page.color_page.bg.b);
+	init_pair(18,25,26); /* type page color */
 }
 
 void tui_main(){
 	set_uptui();
+	bkgd(COLOR_PAIR(18));
 
 	WINDOW* challange_space_win= newwin(
 			type_page.challenge_space.h
@@ -64,8 +97,12 @@ void tui_main(){
 			, type_page.type_space.x);
 	refresh();
 	
+	wbkgd(type_space_win,COLOR_PAIR(16));
+	wbkgd(challange_space_win,COLOR_PAIR(17));
+	
+	wattron(challange_space_win,COLOR_PAIR(15));
 	box(challange_space_win,0,0);
-	box(type_space_win,0,0);
+	wattroff(challange_space_win,COLOR_PAIR(15));
 
 	char* test_str="quick brown fox jump over the lazy brown dog";
 	gb_init(test_str, (int)strlen(test_str), 256);
@@ -82,7 +119,9 @@ void tui_main(){
 		gb_get_status(&str, &status);
 
 		wclear(type_space_win);
+		wattron(type_space_win,COLOR_PAIR(14));
 		box(type_space_win,0,0);
+		wattroff(type_space_win,COLOR_PAIR(14));
 		wmove(type_space_win,1,1);
 
 		int i=0,x=-1,y=-1;
@@ -128,25 +167,36 @@ void tui_main(){
 }
 
 static void color_fill(){
-	assume_default_colors(COLOR_WHITE, COLOR_BLACK);
 	struct rgb def_fg,def_bg;
 	short fg_num,bg_num;
 	pair_content(0, &fg_num, &bg_num);
 	color_content(fg_num, &def_fg.r, &def_fg.g, &def_fg.b);
 	color_content(bg_num, &def_bg.r, &def_bg.g, &def_bg.b);
 
-	fprintf(LOG_F,"fg %d %d %d\n",def_fg.r,def_fg.g,def_fg.b);
-	fprintf(LOG_F,"bg %d %d %d\n",def_bg.r,def_bg.g,def_bg.b);
-	fflush(LOG_F);
-
 	struct rgb* l[][2]={
-		{&type_page.color_untyped.bg	,&def_bg},
-		{&type_page.color_correct.bg	,&def_bg},
-		{&type_page.color_wrong.bg	,&def_bg},
-		{&type_page.color_border.bg	,&def_bg},
-		{&type_page.color_untyped.fg	,&def_fg},
-		{&type_page.color_correct.fg	,&def_fg},
-		{&type_page.color_border.fg	,&def_fg},
+		{&type_page.color_page.fg	,&def_fg},
+		{&type_page.color_page.bg	,&def_bg},
+
+		{&type_page.type_space.color_border.fg	,&type_page.color_page.fg},
+		{&type_page.type_space.color_border.bg	,&type_page.color_page.bg},
+
+		{&type_page.challenge_space.color_border.fg	,&type_page.color_page.fg},
+		{&type_page.challenge_space.color_border.bg	,&type_page.color_page.bg},
+
+		{&type_page.type_space.color.fg	,&type_page.color_page.fg},
+		{&type_page.type_space.color.bg	,&type_page.color_page.bg},
+
+		{&type_page.challenge_space.color.fg	,&type_page.color_page.fg},
+		{&type_page.challenge_space.color.bg	,&type_page.color_page.bg},
+
+		{&type_page.color_untyped.fg	,&type_page.type_space.color.fg},
+		{&type_page.color_untyped.bg	,&type_page.type_space.color.bg},
+
+		{&type_page.color_correct.fg	,&type_page.type_space.color.fg},
+		{&type_page.color_correct.bg	,&type_page.type_space.color.bg},
+
+		{&type_page.color_wrong.fg	,&type_page.type_space.color.fg},
+		{&type_page.color_wrong.bg	,&type_page.type_space.color.bg},
 	};
 	for(long unsigned int i=0;i<sizeof(l)/sizeof(l[0]);++i){
 		struct rgb* set=l[i][0];
